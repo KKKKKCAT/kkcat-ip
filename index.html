@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover your public IP address (IPv4 / IPv6)">
+    <title>IP Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #acb6e5);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        pre {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 15px;
+            overflow: auto;
+            border-radius: 5px;
+            color: #333;
+            text-align: left;
+        }
+        .status-light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 5px;
+            animation: blink-animation 1s steps(5, start) infinite;
+        }
+        .green-light {
+            background-color: green;
+        }
+        .red-light {
+            background-color: red;
+        }
+        @keyframes blink-animation {
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your IP Information</h1>
+        <pre id="ipInfo"></pre>
+        <h2>Telegram Server Status</h2>
+        <pre id="telegramStatus">Checking...</pre>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchIPInfo();
+            fetchTelegramDCStatus();
+        });
+
+        async function fetchIPInfo() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                const info = 
+                `IP: ${data.ip}
+Network: ${data.network}
+City: ${data.city}
+Country: ${data.country_name} (${data.country_code})
+Continent: ${data.continent_code}
+Time Zone: ${data.timezone} (UTC Offset: ${data.utc_offset})
+Latitude: ${data.latitude}
+Longitude: ${data.longitude}
+ASN: ${data.asn}
+Organization: ${data.org}`;
+                document.getElementById('ipInfo').innerText = info;
+            } catch (error) {
+                console.error('Failed to fetch IP information:', error);
+                document.getElementById('ipInfo').innerText = 'Unable to fetch IP information. Please check your network settings or try again later.';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchIPInfo();
+            fetchTelegramDCStatus();
+        });
+
+        async function fetchTelegramDCStatus() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/OctoGramApp/assets/master/DCStatus/dc_status.json');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const dcStatusJson = await response.json();
+                const dcLocations = {
+                    1: "Miami FL, USA",
+                    2: "Amsterdam, NL",
+                    3: "Miami FL, USA",
+                    4: "Amsterdam, NL",
+                    5: "Singapore, SG"
+                };
+
+                let statusSummary = '';
+                dcStatusJson.status.forEach(dc => {
+                    const colorClass = dc.dc_status === 1 ? 'green-light' : 'red-light';
+                    statusSummary += `<span class="status-light ${colorClass}"></span> DC${dc.dc_id} ${dcLocations[dc.dc_id]}: ${dc.ping} ms\n`;
+                });
+
+                document.getElementById('telegramStatus').innerHTML = statusSummary.trim();
+            } catch (error) {
+                document.getElementById('telegramStatus').innerText = 'Error fetching Telegram server statuses.';
+            }
+        }
+    </script>
+</body>
+</html>
