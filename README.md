@@ -3,6 +3,8 @@
 
 示範網站：https://kkcat-ip.pages.dev
 
+![](https://raw.githubusercontent.com/KKKKKCAT/kkcat-ip/main/kkcat-ip.png)
+
 ### 功能和設計
 這個網頁的主要功能是展示訪問者的公共 IP 信息，包括網絡、城市、國家、大陸、時區及其地理坐標。此外，網頁還能顯示與特定 Telegram 數據中心的連接狀態，包括它們的響應時間和當前狀態（通過顏色指示燈顯示）。
 
