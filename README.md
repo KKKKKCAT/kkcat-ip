@@ -14,3 +14,28 @@
 - 實時數據獲取：通過異步 JavaScript 請求，網頁實時從公開的 API 獲取 IP 數據和 Telegram 數據中心的狀態。
 - 狀態指示燈：每個數據中心旁邊有一個狀態燈，根據數據中心的狀態顯示不同的顏色。綠色代表一切正常，紅色則表示有問題。此外，這些狀態燈還會有閃爍效果，以引起用戶的注意。
 - 響應式設計：網頁能夠適應不同大小的屏幕，確保在手機、平板和桌面計算機上都能提供良好的用戶體驗。
+
+### 技術實現
+網頁後端采用了異步 JavaScript（AJAX）來處理數據的獲取和展示。使用 fetch API 從不同的源異步獲取數據，然後將結果動態顯示在頁面上。例如，通過以下代碼片段獲取 IP 信息：
+```
+async function fetchIPInfo() {
+    try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        const info = `IP: ${data.ip}
+        Network: ${data.network}
+        City: ${data.city}
+        Country: ${data.country_name} (${data.country_code})
+        Continent: ${data.continent_code}
+        Time Zone: ${data.timezone} (UTC Offset: ${data.utc_offset})
+        Latitude: ${data.latitude}
+        Longitude: ${data.longitude}
+        ASN: ${data.asn}
+        Organization: ${data.org}`;
+        document.getElementById('ipInfo').innerText = info;
+    } catch (error) {
+        document.getElementById('ipInfo').innerText = 'Unable to fetch IP information. Please check your network settings or try again later.';
+    }
+}
+
+```
