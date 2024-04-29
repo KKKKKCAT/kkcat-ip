@@ -39,3 +39,6 @@ async function fetchIPInfo() {
 }
 
 ```
+
+### 部署
+Cloudflare Pages / 自行upload index.html
